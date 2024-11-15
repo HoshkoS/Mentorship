@@ -6,16 +6,12 @@ const App = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchGreeting = async () => {
-      try {
-        const response = await api.get('/greetings');
-        setMessage(response.data);
-      } catch (error) {
-        setError('Error fetching greeting');
-      }
-    };
-
-    fetchGreeting();
+    api.get('/greetings')
+      .then((res) =>
+        setMessage(res.data)
+      ).catch(() =>
+        setError('Error fetching greeting')
+      )
   }, []);
 
   return (

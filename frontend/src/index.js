@@ -1,8 +1,10 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from 'react-dom/client';
 import App from "./App";
+import Login from './login/Login';
 import "./App.scss";
 
-const el = document.getElementById("root");
+const domNode = document.getElementById("root");
 
-ReactDOM.render(<App />, el);
+const root = createRoot(domNode);
+root.render(<Login />);

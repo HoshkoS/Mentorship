@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../utils/axios';
+import styles from './styles.scss';
 
 const Login = () => {
   const [message, setMessage] = useState(null);
@@ -8,7 +9,7 @@ const Login = () => {
   const [pass, setPass] = useState(null);
 
   const handleSignUp = () => {
-    api.post('/users', {
+    api.post('/sign_up', {
       user: {
         email: email,
         password: pass

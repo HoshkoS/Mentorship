@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import api from '../utils/axios';
 import styles from './styles.scss';
 
-const Login = () => {
-  const [message, setMessage] = useState(null);
+const Registration = () => {
   const [error, setError] = useState(null);
   const [email, setEmail] = useState(null);
   const [pass, setPass] = useState(null);
 
-  const handleSignUp = () => {
+  const handleSignUp = (e) => {
+    e.preventDefault();
+
     api.post('/sign_up', {
       user: {
         email: email,
@@ -16,7 +17,7 @@ const Login = () => {
       }
     })
       .then((res) =>
-        setMessage(res.data)
+        console.log(res.data)
       ).catch(() =>
         setError('Error fetching greeting')
       )
@@ -28,7 +29,6 @@ const Login = () => {
 
   return (
     <>
-      <div>{message}</div>
       <form onSubmit={handleSignUp}>
         <label>Enter your email:
           <input type="email" onChange={handleEmailChange} />
@@ -42,4 +42,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Registration;

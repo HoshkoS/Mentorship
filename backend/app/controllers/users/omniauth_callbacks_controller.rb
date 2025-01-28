@@ -1,42 +1,43 @@
 # frozen_string_literal: true
 
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
+  respond_to :json
 
   def google_oauth2
-    @user = User.from_google_omniauth(request.env["omniauth.auth"])
-    if @user.persisted?
-      sign_in_and_redirect @user, event: :authentication
+    binding.pry
+    token = params[:authenticity_token]
+    user_info = fetch_google_user_info(token)
+
+    if user_info
+      user = User.find_or_create_by(email: user_info[:email]) do |u|
+        u.name = user_info[:name]
+        u.provider = 'google'
+        u.uid = user_info[:sub]
+        u.password = Devise.friendly_token[0, 20]
+      end
+
+      if user.persisted?
+        sign_in(user, store: false)
+        render json: { message: 'Login successful', user: user }, status: :ok
+      else
+        render json: { error: 'Unable to save user' }, status: :unprocessable_entity
+      end
     else
-      session["devise.oauth_data"] = request.env["omniauth.auth"].except(:extra) # Removing extra as it can overflow some session stores
-      redirect_to '/path/to/frontend/failure/state'
+      render json: { error: 'Invalid token or Google data' }, status: :unauthorized
     end
   end
 
   def failure
-    redirect_to '/user/sign_in?error=Unknown'
+    # binding.pry
+    render json: { error: 'Invalid token or Google data' }, status: :unauthorized
   end
 
-  # You should also create an action method in this controller like this:
-  # def twitter
-  # end
+  private
 
-  # More info at:
-  # https://github.com/heartcombo/devise#omniauth
-
-  # GET|POST /resource/auth/twitter
-  # def passthru
-  #   super
-  # end
-
-  # GET|POST /users/auth/twitter/callback
-  # def failure
-  #   super
-  # end
-
-  # protected
-
-  # The path used when OmniAuth fails
-  # def after_omniauth_failure_path_for(scope)
-  #   super(scope)
-  # end
+  def fetch_google_user_info(token)
+    response = RestClient.get('https://oauth2.googleapis.com/tokeninfo', params: { id_token: token })
+    JSON.parse(response.body, symbolize_names: true)
+  rescue RestClient::ExceptionWithResponse
+    nil
+  end
 end

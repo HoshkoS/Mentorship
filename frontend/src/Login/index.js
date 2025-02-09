@@ -2,18 +2,16 @@ import React, { useState } from 'react';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { useNavigate } from "react-router-dom";
 import api from '../utils/axios';
-import { Environment } from '@rails/webpacker';
-import env from '@rails/webpacker/package/env';
 
 const GoogleLoginButton = () => {
   const navigate = useNavigate();
 
   const handleSuccess = (credentialResponse) => {
-    api.post('/auth/google_oauth2', {
-      token: credentialResponse.credential,
+    api.post('/google_oauth2', {
+      token: credentialResponse.credential
     }).then(res => {
       console.log('Login successful:', res);
-      // navigate('/');
+      navigate('/');
     }).catch(e =>
       console.error('Login failed:', e)
     )
@@ -23,12 +21,10 @@ const GoogleLoginButton = () => {
   };
 
   return (
-    <GoogleOAuthProvider clientId={env.clientId}>
-      <GoogleLogin
-        onSuccess={handleSuccess}
-        onError={handleError}
-      />
-    </GoogleOAuthProvider>
+    <GoogleLogin
+      onSuccess={handleSuccess}
+      onError={handleError}
+    />
   );
 };
 
@@ -49,7 +45,7 @@ const Login = () => {
     })
       .then((res) => {
         console.log(res.data);
-        // navigate('/');
+        navigate('/');
       }).catch(() =>
         setError('Error fetching greeting')
       )
@@ -60,7 +56,7 @@ const Login = () => {
   const handlePasswordChange = e => setPass(e.target.value);
 
   return (
-    <>
+    <GoogleOAuthProvider>
       <form onSubmit={handleSignIn}>
         <label>Enter your email:
           <input type="email" onChange={handleEmailChange} />
@@ -71,7 +67,7 @@ const Login = () => {
         <button type="submit">Log in</button>
       </form>
       <GoogleLoginButton />
-    </>
+    </GoogleOAuthProvider>
   );
 };
 

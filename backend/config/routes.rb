@@ -9,5 +9,6 @@ Rails.application.routes.draw do
     sessions: 'users/sessions',
     omniauth_callbacks: 'users/omniauth_callbacks'
   }
+  post 'google_oauth2' => 'some'
   get 'greetings', to: 'application#hello_world'
 end

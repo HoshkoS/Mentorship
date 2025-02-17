@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from './utils/axios';
+import Movies from './Movies';
 
 const App = () => {
   const [message, setMessage] = useState(null);
@@ -23,6 +24,7 @@ const App = () => {
       ) : (
         <p>Loading...</p>
       )}
+      <Movies />
     </div>
   );
 };

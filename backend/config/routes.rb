@@ -11,4 +11,5 @@ Rails.application.routes.draw do
   }
   post 'google_oauth2' => 'some'
   get 'greetings', to: 'application#hello_world'
+  resources :movies, only: [:index, :show, :create]
 end

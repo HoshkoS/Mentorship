@@ -1,4 +1,4 @@
-class SomeController < ApplicationController
+class GoogleAuthController < ApplicationController
   respond_to :json
 
   def google_oauth2
@@ -7,7 +7,6 @@ class SomeController < ApplicationController
 
     if user_info
       user = User.find_or_create_by(email: user_info[:email]) do |u|
-        u.name = user_info[:name]
         u.provider = 'google'
         u.uid = user_info[:sub]
         u.password = Devise.friendly_token[0, 20]

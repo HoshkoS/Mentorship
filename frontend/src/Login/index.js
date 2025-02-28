@@ -4,12 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import api from '../utils/axios';
+import '../styles/form_styles.scss';
 
 const GoogleLoginButton = () => {
   const navigate = useNavigate();
 
   const handleSuccess = (credentialResponse) => {
-    api.post('/google_oauth2', {
+    api.post('/google_auth/google_oauth2', {
       token: credentialResponse.credential
     }).then(res => {
       console.log('Login successful:', res);

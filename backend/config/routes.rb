@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     sessions: 'users/sessions',
     omniauth_callbacks: 'users/omniauth_callbacks'
   }
-  post 'google_oauth2' => 'some'
+  post 'google_auth/google_oauth2', to: 'google_auth#google_oauth2'
   get 'greetings', to: 'application#hello_world'
   resources :movies, only: [:index, :show, :create]
 end

@@ -2,6 +2,7 @@ import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import api from '../utils/axios';
+import '../styles/form_styles.scss';
 
 const MovieForm = () => {
   const validationSchema = Yup.object({

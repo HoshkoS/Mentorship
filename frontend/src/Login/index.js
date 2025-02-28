@@ -56,7 +56,7 @@ const Login = () => {
   };
 
   return (
-    <GoogleOAuthProvider>
+    <GoogleOAuthProvider clientId={process.env.GOOGLE_CLIENT_ID}>
       <div className="container">
         <div className="card">
           <h2 className="card-title">Sign In</h2>

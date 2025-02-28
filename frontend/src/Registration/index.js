@@ -1,44 +1,56 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+import { useNavigate } from 'react-router-dom';
 import api from '../utils/axios';
-import styles from './styles.scss';
+import './styles.scss';
 
 const Registration = () => {
-  const [error, setError] = useState(null);
-  const [email, setEmail] = useState(null);
-  const [pass, setPass] = useState(null);
+  const navigate = useNavigate();
+  const [error, setError] = useState();
 
-  const handleSignUp = (e) => {
-    e.preventDefault();
+  const validationSchema = Yup.object({
+    email: Yup.string().email("Invalid email").required("Email is required"),
+    password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+  });
 
-    api.post('/sign_up', {
-      user: {
-        email: email,
-        password: pass
-      }
-    })
-      .then((res) =>
-        console.log(res.data)
-      ).catch(() =>
-        setError('Error fetching greeting')
-      )
+  const handleSignUp = (values, { setSubmitting, setErrors }) => {
+    api.post('/sign_up', { user: values })
+      .then((res) => navigate('/'))
+      .catch(() => setErrors({ submit: 'Error signing up' }))
+      .finally(() => setSubmitting(false));
   };
 
-  const handleEmailChange = e => setEmail(e.target.value);
-
-  const handlePasswordChange = e => setPass(e.target.value);
-
   return (
-    <>
-      <form onSubmit={handleSignUp}>
-        <label>Enter your email:
-          <input type="email" onChange={handleEmailChange} />
-        </label>
-        <label>Enter your pass:
-          <input type="password" onChange={handlePasswordChange} />
-        </label>
-        <button type="submit">Sign up</button>
-      </form>
-    </>
+    <div className="container">
+      <div className="card">
+        <h2 className="card-title">Sign Up</h2>
+        <Formik
+          initialValues={{ email: "", password: "" }}
+          validationSchema={validationSchema}
+          onSubmit={handleSignUp}
+        >
+          {({ isSubmitting, errors }) => (
+            <Form className="form">
+              <div className="form-group">
+                <label>Email:</label>
+                <Field type="email" name="email" className="input-field" />
+                <ErrorMessage name="email" component="div" className="error-message" />
+              </div>
+              <div className="form-group">
+                <label>Password:</label>
+                <Field type="password" name="password" className="input-field" />
+                <ErrorMessage name="password" component="div" className="error-message" />
+              </div>
+              {errors.submit && <div className="error-message">{errors.submit}</div>}
+              <button type="submit" disabled={isSubmitting} className="submit-button">
+                {isSubmitting ? "Signing Up..." : "Sign Up"}
+              </button>
+            </Form>
+          )}
+        </Formik>
+      </div>
+    </div>
   );
 };
 

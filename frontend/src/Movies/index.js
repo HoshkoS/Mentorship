@@ -32,17 +32,32 @@ const MovieList = () => {
 
   return (
     <>
-      <h1>Movies list</h1>
+      <h1>Movies List</h1>
       <div className="movie-list">
         {movies.map((movie) => (
           <div key={movie.id} className="movie-card">
-            <h2 className="movie-card__title">{movie.title}</h2>
-            <p className="movie-card__description">{movie.description}</p>
-            <span className="movie-card__genre">{movie.genre}</span>
+            {movie.poster_url && (
+              <img src={movie.poster_url} alt={movie.title} className="movie-card__image" />
+            )}
+            <div>
+              <h2 className="movie-card__title">{movie.title}</h2>
+              <p className="movie-card__description">{movie.description}</p>
+              <span className="movie-card__genre">{movie.genre}</span>
+              <p className="movie-card__release-date">
+                <strong>Release Date:</strong> {movie.release_date}
+              </p>
+              {movie.director_id && (
+                <p className="movie-card__director">
+                  <strong>Director ID:</strong> {movie.director_id}
+                </p>
+              )}
+            </div>
           </div>
         ))}
       </div>
-      <button className="button button--primary" onClick={() => navigate('/new_movie')}>Add Movie</button>
+      <button className="button button--primary" onClick={() => navigate('/new_movie')}>
+        Add Movie
+      </button>
     </>
   );
 };

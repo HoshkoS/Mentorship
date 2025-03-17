@@ -14,13 +14,35 @@
 }
 
 .movie-card {
-  background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 16px;
   width: 250px;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  background: #fff;
+  margin: 20px auto;
+
+  &__image {
+    width: 100%;
+    max-width: 250px;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-bottom: 15px;
+  }
+
+  &__release-date,
+  &__director {
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 5px;
+  }
 }
 
 .movie-card:hover {
@@ -59,7 +81,6 @@
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-/* Block Modifier: Primary Button */
 .button--primary {
   background-color: #034968;
   color: white;
@@ -75,14 +96,12 @@
   transform: scale(0.98);
 }
 
-/* Block Modifier: Disabled Button */
 .button--disabled {
   background-color: #ccc;
   color: #666;
   cursor: not-allowed;
 }
 
-/* Responsive Design */
 @media (max-width: 600px) {
   .button {
     width: 100%;

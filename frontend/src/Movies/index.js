@@ -55,7 +55,7 @@ const MovieList = () => {
           </div>
         ))}
       </div>
-      <button className="button button--primary" onClick={() => navigate('/new_movie')}>
+      <button className="button button--primary" onClick={() => navigate('/movie')}>
         Add Movie
       </button>
     </>

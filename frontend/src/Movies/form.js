@@ -3,8 +3,10 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import api from '../utils/axios';
 import '../styles/form_styles.scss';
+import { useNavigate } from "react-router-dom";
 
 const MovieForm = () => {
+  const navigate = useNavigate();
   const [poster, setPoster] = useState(null);
 
   const validationSchema = Yup.object({
@@ -33,6 +35,7 @@ const MovieForm = () => {
         console.log("Movie created:", res.data);
         resetForm();
         setPoster(null);
+        navigate('/');
       })
       .catch((error) => {
         console.error("Error creating movie:", error.response?.data || error);

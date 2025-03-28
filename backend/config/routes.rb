@@ -12,4 +12,8 @@ Rails.application.routes.draw do
   post 'google_auth/google_oauth2', to: 'google_auth#google_oauth2'
   get 'greetings', to: 'application#hello_world'
   resources :movies, only: [:index, :show, :create]
+  resources :watchlists
+  resources :watchlists, only: [:show] do
+    post 'add_movie', on: :member
+  end
 end

@@ -6,4 +6,14 @@ class User < ApplicationRecord
          :omniauthable, omniauth_providers: [:google_oauth2]
 
   has_many :watchlists
+
+  enum role: { user: 0, admin: 1 }
+
+  after_initialize :set_default_role, if: :new_record?
+
+  private
+
+  def set_default_role
+    self.role ||= :user
+  end
 end

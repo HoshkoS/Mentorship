@@ -29,7 +29,7 @@ const WatchlistForm = () => {
       <div className="card">
         <h2 className="card-title">Create Watchlist</h2>
         <Formik
-          initialValues={{ title: "", watched: false, user_id: 1 }}
+          initialValues={{ title: "", watched: false, is_private: false }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
@@ -45,6 +45,13 @@ const WatchlistForm = () => {
                 <Field type="checkbox" name="watched" className="checkbox" /> Watched
               </label>
               <ErrorMessage name="watched" component="div" className="error-message" />
+            </div>
+
+            <div className="form-group">
+              <label>
+                <Field type="checkbox" name="is_private" className="checkbox" /> Private
+              </label>
+              <ErrorMessage name="is_private" component="div" className="error-message" />
             </div>
 
             <button type="submit" className="submit-button">Add Watchlist</button>

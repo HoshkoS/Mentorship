@@ -1,5 +1,6 @@
 class WatchlistsController < ApplicationController
   before_action :set_watchlist, only: [:show, :update, :destroy]
+  before_action -> { authenticate_user_with_role(:user) }, only: [:create, :index, :show, :update, :destroy, :add_movie]
 
   def index
     @watchlists = Watchlist.all
@@ -12,6 +13,7 @@ class WatchlistsController < ApplicationController
 
   def create
     @watchlist = Watchlist.new(watchlist_params)
+    @watchlist.user_id = current_user.id
 
     if @watchlist.save
       render json: @watchlist, status: :created
@@ -33,7 +35,6 @@ class WatchlistsController < ApplicationController
     head :no_content
   end
 
-  # POST /watchlists/:id/add_movie
   def add_movie
     movie = Movie.find(params[:movie_id])
     if movie
@@ -51,6 +52,6 @@ class WatchlistsController < ApplicationController
   end
 
   def watchlist_params
-    params.require(:watchlist).permit(:title, :watched, :user_id)
+    params.require(:watchlist).permit(:title, :watched, :is_private)
   end
 end

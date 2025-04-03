@@ -5,4 +5,10 @@ class ApplicationController < ActionController::Base
   def hello_world
     render plain: "Hello, World!"
   end
+
+  def authenticate_user_with_role(required_role)
+    unless current_user&.send("#{required_role}?")
+      render json: { error: "Access denied" }, status: :forbidden
+    end
+  end
 end

@@ -1,6 +1,7 @@
 class MoviesController < ApplicationController
   respond_to :json
   before_action :set_movie, only: [:show]
+  before_action -> { authenticate_user_with_role(:user) }, only: [:create]
 
   def index
     @movies = Movie.all

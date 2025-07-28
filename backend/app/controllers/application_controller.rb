@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
 
   def authenticate_user_with_role(required_role)
     unless current_user&.send("#{required_role}?")
-      render json: { error: "Access denied" }, status: :forbidden
+      render json: { error: "Access denied" }, status: :unauthorized
     end
   end
 end

@@ -1,6 +1,6 @@
 class WatchlistsController < ApplicationController
   before_action :set_watchlist, only: [:show, :update, :destroy]
-  before_action -> { authenticate_user_with_role(:user) }, only: [:create, :index, :show, :update, :destroy, :add_movie]
+  before_action -> { authenticate_user_with_role(:user) }
 
   def index
     @watchlists = Watchlist.all

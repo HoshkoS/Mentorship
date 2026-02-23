@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 import api from '../utils/axios';
-import { Environment } from '@rails/webpacker';
-import env from '@rails/webpacker/package/env';
+import '../styles/form_styles.scss';
 
 const GoogleLoginButton = () => {
   const navigate = useNavigate();
 
   const handleSuccess = (credentialResponse) => {
-    api.post('/auth/google_oauth2', {
-      token: credentialResponse.credential,
+    api.post('/google_auth/google_oauth2', {
+      token: credentialResponse.credential
     }).then(res => {
       console.log('Login successful:', res);
-      // navigate('/');
+      navigate('/');
     }).catch(e =>
       console.error('Login failed:', e)
     )
@@ -23,55 +24,71 @@ const GoogleLoginButton = () => {
   };
 
   return (
-    <GoogleOAuthProvider clientId={env.clientId}>
+    <div className="google-button">
       <GoogleLogin
         onSuccess={handleSuccess}
         onError={handleError}
       />
-    </GoogleOAuthProvider>
+    </div>
   );
 };
 
 const Login = () => {
   const navigate = useNavigate();
-  const [error, setError] = useState(null);
-  const [email, setEmail] = useState(null);
-  const [pass, setPass] = useState(null);
+  const [error, setError] = useState();
 
-  const handleSignIn = (e) => {
-    e.preventDefault();
+  const validationSchema = Yup.object({
+    email: Yup.string().required("Email is required"),
+    password: Yup.string().required("Password is required"),
+  });
 
+  const handleSignIn = (values, { resetForm }) => {
     api.post('/login', {
       user: {
-        email: email,
-        password: pass
+        ...values
       }
     })
       .then((res) => {
         console.log(res.data);
-        // navigate('/');
+        navigate('/');
       }).catch(() =>
         setError('Error fetching greeting')
       )
   };
 
-  const handleEmailChange = e => setEmail(e.target.value);
-
-  const handlePasswordChange = e => setPass(e.target.value);
-
   return (
-    <>
-      <form onSubmit={handleSignIn}>
-        <label>Enter your email:
-          <input type="email" onChange={handleEmailChange} />
-        </label>
-        <label>Enter your pass:
-          <input type="password" onChange={handlePasswordChange} />
-        </label>
-        <button type="submit">Log in</button>
-      </form>
-      <GoogleLoginButton />
-    </>
+    <GoogleOAuthProvider clientId={process.env.GOOGLE_CLIENT_ID}>
+      <div className="container">
+        <div className="card">
+          <h2 className="card-title">Sign In</h2>
+          <Formik
+            initialValues={{ email: "", password: "" }}
+            validationSchema={validationSchema}
+            onSubmit={handleSignIn}
+          >
+            {({ isSubmitting, errors }) => (
+              <Form className="form">
+                <div className="form-group">
+                  <label>Email:</label>
+                  <Field type="email" name="email" className="input-field" />
+                  <ErrorMessage name="email" component="div" className="error-message" />
+                </div>
+                <div className="form-group">
+                  <label>Password:</label>
+                  <Field type="password" name="password" className="input-field" />
+                  <ErrorMessage name="password" component="div" className="error-message" />
+                </div>
+                {errors.submit && <div className="error-message">{errors.submit}</div>}
+                <button type="submit" disabled={isSubmitting} className="submit-button">
+                  {isSubmitting ? "Signing Up..." : "Sign Up"}
+                </button>
+              </Form>
+            )}
+          </Formik>
+          <GoogleLoginButton />
+        </div>
+      </div>
+    </GoogleOAuthProvider>
   );
 };
 

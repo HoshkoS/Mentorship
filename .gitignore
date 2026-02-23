@@ -27,3 +27,4 @@ node_modules
 
 /backend/app/assets/builds/*
 !/backend/app/assets/builds/.keep
+.env
